@@ -40,9 +40,9 @@ with st.container() as row_description:
     with col_github:
         github = st.button(label = 'Github')
 
-    #with col_download_ipybn:
-    #    st.download_button(label = 'Download .ipynb', data = hotels,
-    #                       file_name = 'hotels_dashboard.ipynb', )
+    with col_download_ipybn:
+        st.download_button(label = 'Download .ipynb', data = hotels,
+                           file_name = 'hotels_dashboard.ipynb', )
 
 #open my github
 if github: open_link(f"http://google.com")
