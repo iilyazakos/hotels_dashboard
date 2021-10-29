@@ -30,22 +30,22 @@ hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
 
 
 #[Header & Description]
-with st.container() as row_description:
-    st.title('Hotels booking dashboard')
-
-    st.markdown('hello bla bla bla')
-
-    col_github, col_download_ipybn = st.columns([1, 1])
-
-    with col_github:
-        github = st.button(label = 'Github')
-
-    with col_download_ipybn:
-        st.download_button(label = 'Download .ipynb', data = hotels,
-                           file_name = 'hotels_dashboard.ipynb', )
-
-#open my github
-if github: open_link(f"http://google.com")
+# with st.container() as row_description:
+#     st.title('Hotels booking dashboard')
+#
+#     st.markdown('hello bla bla bla')
+#
+#     col_github, col_download_ipybn = st.columns([1, 1])
+#
+#     with col_github:
+#         github = st.button(label = 'Github')
+#
+#     with col_download_ipybn:
+#         st.download_button(label = 'Download .ipynb', data = hotels,
+#                            file_name = 'hotels_dashboard.ipynb', )
+#
+# #open my github
+# if github: open_link(f"http://google.com")
 
 #[Totals]
 with st.container() as row_totals:
@@ -70,7 +70,7 @@ with st.container() as row_prices_books:
                                'reserved_room_type': 'Code of the booked room type',
                                'hotel': 'Type of hotels'})
 
-    st.plotly_chart(fig_box)
+    st.plotly_chart(fig_box, use_container_width=True)
 
 
 #[Bookings]
@@ -95,7 +95,7 @@ with st.container() as row_price_dynamics_business_month:
         fig_line = px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
                            title='How does the price of a hotel change throughout the year')
 
-        st.plotly_chart(fig_line)
+        st.plotly_chart(fig_line, use_container_width=True)
 
         with col_business_month:
             resort_raw = hotels[(hotels['hotel'] == 'Resort Hotel') & (hotels['is_canceled'] == 0)]
@@ -114,7 +114,7 @@ with st.container() as row_price_dynamics_business_month:
             fig_busy_month = px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
                                      title='The busiest month')
 
-            st.plotly_chart(fig_busy_month)
+            st.plotly_chart(fig_busy_month, use_container_width=True)
 
 #[Where from clients]
 with st.container() as row_from:
@@ -127,7 +127,7 @@ with st.container() as row_from:
                             hover_name=data_countries['country'],
                             title='Where do the guests come from (map)')
 
-    st.plotly_chart(fig_map)
+    st.plotly_chart(fig_map, use_container_width=True)
 
     col_from_resort, col_from_city = st.columns([3, 3])
 
@@ -143,7 +143,7 @@ with st.container() as row_from:
         fig_resort_bar = px.bar(data_resort_for_bar, x='country', y='number of guests',
                                 title='Where do the guests come from: Resort hotels')
 
-        st.plotly_chart(fig_resort_bar)
+        st.plotly_chart(fig_resort_bar, use_container_width=True)
 
     with col_from_city:
         # {City hotels BAR}
@@ -157,7 +157,7 @@ with st.container() as row_from:
         fig_city_bar = px.bar(data_city_for_bar, x='country', y='number of guests',
                               title='Where do the guests come from: City hotels')
 
-        st.plotly_chart(fig_city_bar)
+        st.plotly_chart(fig_city_bar, use_container_width=True)
 
 
 #[Bookings]
@@ -172,7 +172,7 @@ with st.container() as row_top_bookings:
         fig_more_booking = px.pie(hotel_data_more_booking, values='quantity of booking', color='type',
                                   title='The type of hotel with the most bookings', names='type')
 
-        st.plotly_chart(fig_more_booking)
+        st.plotly_chart(fig_more_booking, use_container_width=True)
 
     with col_market_segment:
         data_bookings_by_market_segment = hotels[['stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment']]
@@ -188,7 +188,7 @@ with st.container() as row_top_bookings:
                                                 color='market segment', names='market segment',
                                                 title='Bookings by market segment')
 
-        st.plotly_chart(fig_bookings_by_market_segment)
+        st.plotly_chart(fig_bookings_by_market_segment, use_container_width=True)
 
 
 #[Cancellations]
@@ -204,7 +204,7 @@ with st.container() as row_cancellations:
                                        color='customer type', log_y=True,
                                        title='Which type of customer cancels the booking more often')
 
-        st.plotly_chart(fig_book_cancellation)
+        st.plotly_chart(fig_book_cancellation, use_container_width=True)
 
         with col_deposit_type:
             data_book_cancellation_deposit = hotels[['deposit_type', 'is_canceled']]
@@ -215,4 +215,4 @@ with st.container() as row_cancellations:
                                                    color='deposit type', log_y=True,
                                                    title='What type of deposit is canceled more often')
 
-            st.plotly_chart(fig_book_cancellation_deposit)
+            st.plotly_chart(fig_book_cancellation_deposit, use_container_width=True)
