@@ -21,7 +21,7 @@ def open_link(url, new_tab=True):
 
 
 #[Loading dataset]
-_hotels = pd.read_csv("C:\dataset\dataset_1\hotel_bookings.csv")
+_hotels = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-11/hotels.csv')
 
 hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
                   'reserved_room_type', 'assigned_room_type', 'adr', 'arrival_date_day_of_month',
