@@ -31,7 +31,7 @@ st.set_page_config(layout = 'wide')
 with st.container() as row_description:
     st.title('Hotels booking dashboard')
 
-    st.markdown("hello it's my github")
+    st.markdown("Hello it's my github")
 
     col_github, col_download_ipybn = st.columns([1, 1])
 
