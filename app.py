@@ -19,7 +19,8 @@ from bokeh.models.widgets import Div
 
 
 #[Loading dataset]
-_hotels = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-02-11/hotels.csv')
+_hotels = pd.read_csv('https://github.com/iilyazakos/hotels_dashboard/blob/master/hotel_bookings.csv?raw=true')
+
 
 hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
           'reserved_room_type', 'assigned_room_type', 'adr', 'arrival_date_day_of_month',
