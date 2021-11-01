@@ -2,13 +2,6 @@
 streamlit hotels dashboard
 '''
 
-def open_link(url, new_tab=True):
-    if new_tab: js = f"window.open('{url}')"
-    else: js = f"window.location.href = '{url}'"
-    html = '<img src onerror="{}">'.format(js)
-    div = Div(text = html)
-    st.bokeh_chart(div)
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -16,6 +9,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 from bokeh.models.widgets import Div
 
+def open_link(url, new_tab=True):
+    if new_tab: js = f"window.open('{url}')"
+    else: js = f"window.location.href = '{url}'"
+    html = '<img src onerror="{}">'.format(js)
+    div = Div(text = html)
+    st.bokeh_chart(div)
 
 
 #[Loading dataset]
@@ -27,27 +26,21 @@ hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
           'stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment', 'customer_type', 'deposit_type']]\
         .replace([np.nan, np.inf], 0)
 
-
+st.set_page_config(layout = 'wide')
 #[Header & Description]
-# with st.container() as row_description:
-#     st.title('Hotels booking dashboard')
-#
-#     st.markdown('hello bla bla bla')
-#
-#     col_github, col_download_ipybn = st.columns([1, 1])
-#
-#     with col_github:
-#         github = st.button(label = 'Github')
-#
-#     with col_download_ipybn:
-#         st.download_button(label = 'Download .ipynb', data = hotels,
-#                            file_name = 'hotels_dashboard.ipynb', )
-#
-# #open my github
-# if github: open_link(f"http://google.com")
+with st.container() as row_description:
+    st.title('Hotels booking dashboard')
+
+    st.markdown("hello it's my github")
+
+    col_github, col_download_ipybn = st.columns([1, 1])
+
+    with col_github:
+        github = st.button(label = 'Github')
+#open my github
+if github: open_link(f"https://github.com/iilyazakos")
 
 #[Totals]
-st.set_page_config(layout = 'wide')
 with st.container() as row_totals:
     col_avg, col_count = st.columns([3, 3])
 
