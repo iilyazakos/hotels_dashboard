@@ -20,37 +20,34 @@ def open_link(url, new_tab=True):
 #[Loading dataset]
 _hotels = pd.read_csv('https://github.com/iilyazakos/hotels_dashboard/blob/master/hotel_bookings.csv?raw=true')
 
-
 hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
           'reserved_room_type', 'assigned_room_type', 'adr', 'arrival_date_day_of_month',
           'stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment', 'customer_type', 'deposit_type']]\
         .replace([np.nan, np.inf], 0)
 
-st.set_page_config(layout = 'wide')
+
+st.set_page_config(layout = "wide")
+st.title('Hotels booking dashboard')
+
 #[Header & Description]
 with st.container() as row_description:
-    st.title('Hotels booking dashboard')
-
-    st.markdown("Hello it's my github")
-
-    col_github, col_download_ipybn = st.columns([1, 1])
+    col_github, col_download_ipybn = st.columns(2)
 
     with col_github:
+        st.markdown("Hello it's my github")
         github = st.button(label = 'Github')
 #open my github
-if github: open_link(f"https://github.com/iilyazakos")
+if github: open_link("https://github.com/iilyazakos")
 
 #[Totals]
 with st.container() as row_totals:
-    col_avg, col_count = st.columns([3, 3])
+    col_avg, col_count = st.columns(2)
 
     with col_avg:
         st.metric(label = 'Average price per room', value = '$'+str(round(hotels['adr'].mean(), 2)))
 
     with col_count:
         st.metric(label = 'Count of cancellations', value = int(hotels["is_canceled"].sum()))
-
-    #TODO: busiest month
 
 
 #[Prices]
@@ -68,7 +65,7 @@ with st.container() as row_prices_books:
 
 #[Bookings]
 with st.container() as row_price_dynamics_business_month:
-    col_price_dynamics, col_business_month = st.columns([3, 3])
+    col_price_dynamics, col_business_month = st.columns(2)
 
     with col_price_dynamics:
         data_city = hotels[(hotels['hotel'] == 'Resort Hotel') & (hotels['is_canceled'] == 0)]
@@ -84,11 +81,11 @@ with st.container() as row_price_dynamics_business_month:
         city_resort_data.columns = ['month', 'price for resort hotel', 'price for a city hotel']
 
         # {Line}
-        fig_line = go.Figure()
         fig_line = px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
                    title='How does the price of a hotel change throughout the year')
 
         st.plotly_chart(fig_line, use_container_width=True)
+
 
         with col_business_month:
             resort_raw = hotels[(hotels['hotel'] == 'Resort Hotel') & (hotels['is_canceled'] == 0)]
@@ -103,7 +100,6 @@ with st.container() as row_price_dynamics_business_month:
             final_data.sort_values(by=['month'], inplace=True)
 
             # {Line}
-            fig_busy_month = go.Figure()
             fig_busy_month = px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
                                      title='The busiest month')
 
@@ -122,7 +118,8 @@ with st.container() as row_from:
 
     st.plotly_chart(fig_map, use_container_width=True)
 
-    col_from_resort, col_from_city = st.columns([3, 3])
+with st.container() as col_from:
+    col_from_resort, col_from_city = st.columns(2)
 
     with col_from_resort:
         # {Resort hotels BAR}
@@ -132,7 +129,6 @@ with st.container() as row_from:
         data_resort_for_bar = data_resort_for_bar['country'].value_counts().reset_index()
         data_resort_for_bar.columns = ['country', 'number of guests']
 
-        fig_resort_bar = go.Figure()
         fig_resort_bar = px.bar(data_resort_for_bar, x='country', y='number of guests',
                         title='Where do the guests come from: Resort hotels')
 
@@ -146,7 +142,6 @@ with st.container() as row_from:
         data_city_for_bar = data_city_for_bar['country'].value_counts().reset_index()
         data_city_for_bar.columns = ['country', 'number of guests']
 
-        fig_city_bar = go.Figure()
         fig_city_bar = px.bar(data_city_for_bar, x='country', y='number of guests',
                       title='Where do the guests come from: City hotels')
 
@@ -155,7 +150,7 @@ with st.container() as row_from:
 
 #[Bookings]
 with st.container() as row_top_bookings:
-    col_hotel_type, col_market_segment = st.columns([1, 1])
+    col_hotel_type, col_market_segment = st.columns(2)
 
     with col_hotel_type:
         hotel_data_more_booking = hotels['hotel'].value_counts().reset_index()
@@ -186,7 +181,7 @@ with st.container() as row_top_bookings:
 
 #[Cancellations]
 with st.container() as row_cancellations:
-    col_clients_types, col_deposit_type = st.columns([1, 1])
+    col_clients_types, col_deposit_type = st.columns(2)
 
     with col_clients_types:
         data_book_cancellation = hotels[['customer_type', 'is_canceled']]
