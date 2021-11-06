@@ -1,4 +1,4 @@
-## 🏡Hotels booking dashboard
+## 🏡Hotels bookings dashboard
 ### Description 
 
 ### Tech stack
