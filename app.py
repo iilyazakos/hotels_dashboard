@@ -41,13 +41,17 @@ if github: open_link("https://github.com/iilyazakos")
 
 #[Totals]
 with st.container() as row_totals:
-    col_avg, col_count = st.columns(2)
+    col_avg, col_count_canceled, col_count_success= st.columns(3)
 
     with col_avg:
         st.metric(label = 'Average price per room', value = '$'+str(round(hotels['adr'].mean(), 2)))
 
-    with col_count:
+    with col_count_canceled:
         st.metric(label = 'Count of cancellations', value = int(hotels["is_canceled"].sum()))
+
+    with col_count_success:
+        st.metric(label = 'Count of success', value = int((hotels["is_canceled"]==0).sum()))
+
 
 
 #[Prices]
