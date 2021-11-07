@@ -79,8 +79,17 @@ with st.container() as row_price_dynamics_business_month:
         city_resort_data.columns = ['month', 'price for resort hotel', 'price for a city hotel']
 
         # {Line}
-        st.plotly_chart(px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
-                   title='How does the price of a hotel change throughout the year'), use_container_width=True)
+        fig_price_dynamics = px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
+                   title='How does the price of a hotel change throughout the year')
+
+        fig_price_dynamics.update_layout(legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1))
+
+        st.plotly_chart(fig_price_dynamics, use_container_width=True)
 
 
         with col_business_month:
@@ -96,8 +105,17 @@ with st.container() as row_price_dynamics_business_month:
             final_data.sort_values(by=['month'], inplace=True)
 
             # {Line}
-            st.plotly_chart(px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
-                                     title='The busiest month'), use_container_width=True)
+            fig_business_month = px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
+                                     title='The busiest month')
+
+            fig_business_month.update_layout(legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="right",
+                x=1))
+
+            st.plotly_chart(fig_business_month, use_container_width=True)
 
 #[Where from clients]
 with st.container() as row_from:
