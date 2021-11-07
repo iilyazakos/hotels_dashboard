@@ -6,8 +6,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
-import plotly.graph_objects as go
 from bokeh.models.widgets import Div
+
 
 def open_link(url, new_tab=True):
     if new_tab: js = f"window.open('{url}')"
@@ -53,14 +53,12 @@ with st.container() as row_totals:
 #[Prices]
 with st.container() as row_prices_books:
     data_box_guests_pay = hotels[hotels['is_canceled'] == 0]
-    fig_box = go.Figure()
-    fig_box = px.box(data_box_guests_pay, x = 'reserved_room_type', y = 'adr', color = 'hotel',
+
+    st.plotly_chart(px.box(data_box_guests_pay, x = 'reserved_room_type', y = 'adr', color = 'hotel',
              title = 'How much do guests pay per room per day',
              labels = {'adr': 'Average daily rate',
                        'reserved_room_type': 'Code of the booked room type',
-                       'hotel': 'Type of hotels'})
-
-    st.plotly_chart(fig_box, use_container_width=True)
+                       'hotel': 'Type of hotels'}), use_container_width=True)
 
 
 #[Bookings]
@@ -81,10 +79,8 @@ with st.container() as row_price_dynamics_business_month:
         city_resort_data.columns = ['month', 'price for resort hotel', 'price for a city hotel']
 
         # {Line}
-        fig_line = px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
-                   title='How does the price of a hotel change throughout the year')
-
-        st.plotly_chart(fig_line, use_container_width=True)
+        st.plotly_chart(px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
+                   title='How does the price of a hotel change throughout the year'), use_container_width=True)
 
 
         with col_business_month:
@@ -100,10 +96,8 @@ with st.container() as row_price_dynamics_business_month:
             final_data.sort_values(by=['month'], inplace=True)
 
             # {Line}
-            fig_busy_month = px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
-                                     title='The busiest month')
-
-            st.plotly_chart(fig_busy_month, use_container_width=True)
+            st.plotly_chart(px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
+                                     title='The busiest month'), use_container_width=True)
 
 #[Where from clients]
 with st.container() as row_from:
@@ -111,12 +105,10 @@ with st.container() as row_from:
     data_countries.columns = ['country', 'number of guests']
 
     # {choropleth}
-    fig_map = px.choropleth(data_countries, locations=data_countries['country'],
+    st.plotly_chart(px.choropleth(data_countries, locations=data_countries['country'],
                     color=data_countries['number of guests'],
                     hover_name=data_countries['country'],
-                    title='Where do the guests come from (map)')
-
-    st.plotly_chart(fig_map, use_container_width=True)
+                    title='Where do the guests come from (map)'), use_container_width=True)
 
 with st.container() as col_from:
     col_from_resort, col_from_city = st.columns(2)
@@ -129,10 +121,8 @@ with st.container() as col_from:
         data_resort_for_bar = data_resort_for_bar['country'].value_counts().reset_index()
         data_resort_for_bar.columns = ['country', 'number of guests']
 
-        fig_resort_bar = px.bar(data_resort_for_bar, x='country', y='number of guests',
-                        title='Where do the guests come from: Resort hotels')
-
-        st.plotly_chart(fig_resort_bar, use_container_width=True)
+        st.plotly_chart(px.bar(data_resort_for_bar, x='country', y='number of guests',
+                        title='Where do the guests come from: Resort hotels'), use_container_width=True)
 
     with col_from_city:
         # {City hotels BAR}
@@ -142,10 +132,8 @@ with st.container() as col_from:
         data_city_for_bar = data_city_for_bar['country'].value_counts().reset_index()
         data_city_for_bar.columns = ['country', 'number of guests']
 
-        fig_city_bar = px.bar(data_city_for_bar, x='country', y='number of guests',
-                      title='Where do the guests come from: City hotels')
-
-        st.plotly_chart(fig_city_bar, use_container_width=True)
+        st.plotly_chart(px.bar(data_city_for_bar, x='country', y='number of guests',
+                      title='Where do the guests come from: City hotels'), use_container_width=True)
 
 
 #[Bookings]
@@ -157,10 +145,8 @@ with st.container() as row_top_bookings:
         hotel_data_more_booking.columns = ['type', 'quantity of booking']
 
         # {Donut}
-        fig_more_booking = px.pie(hotel_data_more_booking, values='quantity of booking', color='type',
-                          title='The type of hotel with the most bookings', names='type')
-
-        st.plotly_chart(fig_more_booking, use_container_width=True)
+        st.plotly_chart(px.pie(hotel_data_more_booking, values='quantity of booking', color='type',
+                          title='The type of hotel with the most bookings', names='type'), use_container_width=True)
 
     with col_market_segment:
         data_bookings_by_market_segment = hotels[['stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment']]
@@ -172,11 +158,9 @@ with st.container() as row_top_bookings:
         data_bookings_by_market_segment.columns = ['market segment', 'bookings']
 
         # {Donut}
-        fig_bookings_by_market_segment = px.pie(data_bookings_by_market_segment, values='bookings',
+        st.plotly_chart(px.pie(data_bookings_by_market_segment, values='bookings',
                                         color='market segment', names='market segment',
-                                        title='Bookings by market segment')
-
-        st.plotly_chart(fig_bookings_by_market_segment, use_container_width=True)
+                                        title='Bookings by market segment'), use_container_width=True)
 
 
 #[Cancellations]
@@ -188,19 +172,17 @@ with st.container() as row_cancellations:
         data_book_cancellation = data_book_cancellation['customer_type'].value_counts().reset_index()
 
         data_book_cancellation.columns = ['customer type', 'canceled']
-        fig_book_cancellation = px.bar(data_book_cancellation, x='customer type', y='canceled',
-                               color='customer type', log_y=True,
-                               title='Which type of customer cancels the booking more often')
 
-        st.plotly_chart(fig_book_cancellation, use_container_width=True)
+        st.plotly_chart(px.bar(data_book_cancellation, x='customer type', y='canceled',
+                               color='customer type', log_y=True,
+                               title='Which type of customer cancels the booking more often'), use_container_width=True)
 
         with col_deposit_type:
             data_book_cancellation_deposit = hotels[['deposit_type', 'is_canceled']]
             data_book_cancellation_deposit = data_book_cancellation_deposit['deposit_type'].value_counts().reset_index()
 
             data_book_cancellation_deposit.columns = ['deposit type', 'canceled']
-            fig_book_cancellation_deposit = px.bar(data_book_cancellation_deposit, x='deposit type', y='canceled',
-                                           color='deposit type', log_y=True,
-                                           title='What type of deposit is canceled more often')
 
-            st.plotly_chart(fig_book_cancellation_deposit, use_container_width=True)
+            st.plotly_chart(px.bar(data_book_cancellation_deposit, x='deposit type', y='canceled',
+                                           color='deposit type', log_y=True,
+                                           title='What type of deposit is canceled more often'), use_container_width=True)
