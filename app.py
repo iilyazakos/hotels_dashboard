@@ -28,14 +28,15 @@ hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
 
 st.set_page_config(layout = "wide")
 st.title('Hotels booking dashboard')
+st.write('') # TODO: write a description
+
 
 #[Header & Description]
 with st.container() as row_description:
     col_github, col_download_ipybn = st.columns(2)
 
     with col_github:
-        st.markdown("Hello it's my github")
-        github = st.button(label = 'Github')
+        github = st.button(label = ' My Github')
 #open my github
 if github: open_link("https://github.com/iilyazakos")
 
@@ -50,7 +51,7 @@ with st.container() as row_totals:
         st.metric(label = 'Count of cancellations', value = int(hotels["is_canceled"].sum()))
 
     with col_count_success:
-        st.metric(label = 'Count of success', value = int((hotels["is_canceled"]==0).sum()))
+        st.metric(label = 'Count of success booking', value = int((hotels["is_canceled"]==0).sum()))
 
 
 
