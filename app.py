@@ -22,13 +22,14 @@ _hotels = pd.read_csv('https://github.com/iilyazakos/hotels_dashboard/blob/maste
 
 hotels = _hotels[['hotel', 'is_canceled', 'arrival_date_month', 'country',
           'reserved_room_type', 'assigned_room_type', 'adr', 'arrival_date_day_of_month',
-          'stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment', 'customer_type', 'deposit_type']]\
+          'stays_in_weekend_nights', 'stays_in_week_nights', 'market_segment', 'customer_type', 'deposit_type', 'arrival_date_year']]\
         .replace([np.nan, np.inf], 0)
+
 
 
 st.set_page_config(layout = "wide")
 st.title('Hotels booking dashboard')
-st.write('') # TODO: write a description
+st.write('Visualization and analytics of hotel reservations in the Resort and City categories are presented here')
 
 
 #[Header & Description]
@@ -37,7 +38,7 @@ with st.container() as row_description:
 
     with col_github:
         github = st.button(label = ' My Github')
-#open my github
+#Open my github
 if github: open_link("https://github.com/iilyazakos")
 
 #[Totals]
@@ -67,25 +68,35 @@ with st.container() as row_prices_books:
 
 
 #[Bookings]
+
+with st.container() as row_col_slider:
+    dynamics_data = hotels[['hotel', 'is_canceled', 'arrival_date_month', 'arrival_date_year', 'adr']]
+    dynamics_data[['arrival_date']] = pd.to_datetime(
+    dynamics_data['arrival_date_month'].map(str) + '' + dynamics_data['arrival_date_year'].map(str), format='%B%Y') \
+    .dt.strftime('%Y-%m')
+    select_period_1, select_period_2 = st.select_slider('Choose a period',
+                                                          options=dynamics_data['arrival_date'].unique(), value=(
+         dynamics_data['arrival_date'].min(), dynamics_data['arrival_date'].max()))
+    dynamics_data = dynamics_data[dynamics_data['arrival_date'].between(select_period_1, select_period_2)]
+
 with st.container() as row_price_dynamics_business_month:
-    col_price_dynamics, col_business_month = st.columns(2)
+    col_price_dynamics, col_busiest_month = st.columns(2)
 
     with col_price_dynamics:
-        data_city = hotels[(hotels['hotel'] == 'Resort Hotel') & (hotels['is_canceled'] == 0)]
-        data_resort = hotels[(hotels['hotel'] == 'City Hotel') & (hotels['is_canceled'] == 0)]
 
-        data_city = data_city.groupby(['arrival_date_month']).agg({'adr': 'mean'}).reset_index()
-        data_resort = data_resort.groupby('arrival_date_month').agg({'adr': 'mean'}).reset_index()
+        data_city = dynamics_data[(dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
+        data_resort = dynamics_data[(dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
 
-        city_resort_data = pd.merge(data_resort, data_city, how='inner', on='arrival_date_month')
-        city_resort_data['arrival_date_month'] = pd.to_datetime(city_resort_data['arrival_date_month'],
-                                                        format='%B').dt.month
-        city_resort_data.sort_values(by=['arrival_date_month'], inplace=True)
-        city_resort_data.columns = ['month', 'price for resort hotel', 'price for a city hotel']
+        data_city = data_city.groupby(['arrival_date']).agg({'adr': 'mean'}).reset_index()
+        data_resort = data_resort.groupby('arrival_date').agg({'adr': 'mean'}).reset_index()
+
+        city_resort_data = pd.merge(data_resort, data_city, how='inner', on='arrival_date')
+        city_resort_data.sort_values(by = ['arrival_date'], inplace = True)
+        city_resort_data.columns = ['time period', 'price for resort hotel', 'price for a city hotel']
 
         # {Line}
-        fig_price_dynamics = px.line(city_resort_data, x='month', y=['price for resort hotel', 'price for a city hotel'],
-                   title='How does the price of a hotel change throughout the year')
+        fig_price_dynamics = px.line(city_resort_data, x='time period', y=['price for resort hotel', 'price for a city hotel'],
+                   title='How does the price of a hotels change throughout the years ')
 
         fig_price_dynamics.update_layout(legend=dict(
             orientation="h",
@@ -97,30 +108,32 @@ with st.container() as row_price_dynamics_business_month:
         st.plotly_chart(fig_price_dynamics, use_container_width=True)
 
 
-        with col_business_month:
-            resort_raw = hotels[(hotels['hotel'] == 'Resort Hotel') & (hotels['is_canceled'] == 0)]
-            resort_hotel_data = resort_raw['arrival_date_month'].value_counts().reset_index()
-            resort_hotel_data.columns = ['month', 'number of guests']
-            city_raw = hotels[(hotels['hotel'] == 'City Hotel') & (hotels['is_canceled'] == 0)]
-            city_hotel_data = city_raw.arrival_date_month.value_counts().reset_index()
-            city_hotel_data.columns = ['month', 'number of guests']
-            final_data = pd.merge(resort_hotel_data, city_hotel_data, how='inner', on='month')
-            final_data.columns = ['month', 'Guests of resort hotels', 'Guests of city hotels']
-            final_data['month'] = pd.to_datetime(final_data['month'], format='%B').dt.month
-            final_data.sort_values(by=['month'], inplace=True)
+        with col_busiest_month:
+
+            resort_raw = dynamics_data[(dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
+            resort_hotel_data = resort_raw['arrival_date'].value_counts().reset_index()
+            resort_hotel_data.columns = ['time period', 'number of guests']
+
+            city_raw = dynamics_data[(dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
+            city_hotel_data = city_raw['arrival_date'].value_counts().reset_index()
+            city_hotel_data.columns = ['time period', 'number of guests']
+
+            final_data = pd.merge(resort_hotel_data, city_hotel_data, how='inner', on='time period')
+            final_data.columns = ['time period', 'Guests of resort hotels', 'Guests of city hotels']
+            final_data.sort_values(by=['time period'], inplace=True)
 
             # {Line}
-            fig_business_month = px.line(final_data, x='month', y=['Guests of resort hotels', 'Guests of city hotels'],
-                                     title='The busiest month')
+            fig_busiest_month = px.line(final_data, x='time period', y=['Guests of resort hotels', 'Guests of city hotels'],
+                                     title='How did the workload of hotels change by month')
 
-            fig_business_month.update_layout(legend=dict(
+            fig_busiest_month.update_layout(legend=dict(
                 orientation="h",
                 yanchor="bottom",
                 y=1.02,
                 xanchor="right",
                 x=1))
 
-            st.plotly_chart(fig_business_month, use_container_width=True)
+            st.plotly_chart(fig_busiest_month, use_container_width=True)
 
 #[Where from clients]
 with st.container() as row_from:
