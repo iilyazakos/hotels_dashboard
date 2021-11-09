@@ -1,5 +1,5 @@
 ## 🏡Hotels bookings dashboard
-### Description 
+### Visualization and analytics of hotel reservations in the Resort and City categories are presented here
 
 ### Tech stack  
 Using python3+plotly and Streamlit Cloud for deploy  
