@@ -6,6 +6,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from sklearn.linear_model import LinearRegression
 from bokeh.models.widgets import Div
 
 
@@ -213,3 +214,38 @@ with st.container() as row_cancellations:
             st.plotly_chart(px.bar(data_book_cancellation_deposit, x = 'deposit type', y = 'canceled',
                                            color = 'deposit type', log_y=True,
                                            title = 'What type of deposit is canceled more often'), use_container_width = True)
+with st.container() as predict_price:
+
+    a_city = np.array(data_city[['adr']].iloc[6:18])
+    b_city = np.array(data_city[['adr']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
+    model_city = LinearRegression().fit(a_city, b_city.reshape((-1, 1)))
+    pred_city = model_city.predict(a_city)
+    out_city = pd.DataFrame(pred_city)
+
+    a_resort = np.array(data_resort[['adr']].iloc[6:18])
+    b_resort = np.array(data_resort[['adr']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
+    model_resort = LinearRegression().fit(a_resort, b_resort.reshape((-1, 1)))
+    pred_resort = model_resort.predict(a_resort)
+    out_resort = pd.DataFrame(pred_resort)
+
+    out_resort_city = np.hstack([out_city, out_resort])
+    df = pd.DataFrame(out_resort_city, index=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], columns =['city', 'resort'])
+    st.plotly_chart(px.line(df, y = ['city', 'resort'],title = 'Prediction of price changes in city and resort hotels over the next year'), use_container_width=True)
+
+with st.container() as predict_workload:
+
+    x_city = np.array(city_hotel_data[['number of guests']].iloc[6:18])
+    y_city = np.array(city_hotel_data[['number of guests']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
+    model_city_workload = LinearRegression().fit(x_city, y_city.reshape((-1, 1)))
+    pred_city_workload = model_city_workload.predict(x_city)
+    out_city_workload = pd.DataFrame(pred_city_workload)
+
+    x_resort = np.array(resort_hotel_data[['number of guests']].iloc[6:18])
+    y_resort = np.array(resort_hotel_data[['number of guests']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
+    model_resort_workload = LinearRegression().fit(x_resort, y_resort.reshape((-1, 1)))
+    pred_resort_workload = model_resort_workload.predict(x_resort)
+    out_resort_workload = pd.DataFrame(pred_resort_workload)
+
+    out_city_resort_workload = np.hstack([out_city_workload, out_resort_workload])
+    df_workload = pd.DataFrame(out_city_resort_workload, index=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], columns=['city', 'resort'])
+    st.plotly_chart(px.line(df_workload, y=['city', 'resort'], title='Predicting the workload of city and resort hotels over the next year'), use_container_width=True)
