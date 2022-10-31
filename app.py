@@ -77,15 +77,15 @@ with st.container() as row_col_slider:
     select_period_1, select_period_2 = st.select_slider('Choose a period',
                                                           options=dynamics_data['arrival_date'].unique(),
                                                         value = (dynamics_data['arrival_date'].min(), dynamics_data['arrival_date'].max()))
-    dynamics_data = dynamics_data[dynamics_data['arrival_date'].between(select_period_1, select_period_2)]
+    dynamics_data_selection = dynamics_data[dynamics_data['arrival_date'].between(select_period_1, select_period_2)]
 
 with st.container() as row_price_dynamics_business_month:
     col_price_dynamics, col_busiest_month = st.columns(2)
 
     with col_price_dynamics:
 
-        data_city = dynamics_data[(dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
-        data_resort = dynamics_data[(dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
+        data_city = dynamics_data_selection[(dynamics_data_selection['hotel'] == 'Resort Hotel') & (dynamics_data_selection['is_canceled'] == 0)]
+        data_resort = dynamics_data_selection[(dynamics_data_selection['hotel'] == 'City Hotel') & (dynamics_data_selection['is_canceled'] == 0)]
 
         data_city = data_city.groupby(['arrival_date']).agg({'adr': 'mean'}).reset_index()
         data_resort = data_resort.groupby('arrival_date').agg({'adr': 'mean'}).reset_index()
