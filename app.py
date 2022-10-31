@@ -215,7 +215,10 @@ with st.container() as row_cancellations:
                                            color = 'deposit type', log_y=True,
                                            title = 'What type of deposit is canceled more often'), use_container_width = True)
 with st.container() as predict_price:
-
+    data_city = dynamics_data[
+        (dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
+    data_resort = dynamics_data[
+        (dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
     a_city = np.array(data_city[['adr']].iloc[6:18])
     b_city = np.array(data_city[['adr']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
     model_city = LinearRegression().fit(a_city, b_city.reshape((-1, 1)))
