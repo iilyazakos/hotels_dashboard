@@ -95,7 +95,7 @@ with st.container() as row_price_dynamics_business_month:
         city_resort_data.columns = ['time period', 'price for resort hotel', 'price for a city hotel']
 
         # {Line}
-        fig_price_dynamics = px.line(data_resort, x = 'time period', y = ['price for resort hotel', 'price for a city hotel'],
+        fig_price_dynamics = px.line(city_resort_data, x = 'time period', y = ['price for resort hotel', 'price for a city hotel'],
                    title = 'How does the price of a hotels change throughout the years ')
 
         fig_price_dynamics.update_layout(legend = dict(orientation = "h",yanchor = "bottom",
