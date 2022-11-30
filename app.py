@@ -237,8 +237,16 @@ with st.container() as predict_price:
 
 with st.container() as predict_workload:
 
-    x_city = np.array(data_city[['number of guests']].iloc[6:18])
-    y_city = np.array(data_city[['number of guests']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
+    city_raw = dynamics_data[(dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
+    city_hotel_data = city_raw['arrival_date'].value_counts().reset_index()
+    city_hotel_data.columns = ['time period', 'number of guests']
+
+    resort_raw = dynamics_data[(dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
+    resort_hotel_data = resort_raw['arrival_date'].value_counts().reset_index()
+    resort_hotel_data.columns = ['time period', 'number of guests']
+
+    x_city = np.array(city_hotel_data[['number of guests']].iloc[6:18])
+    y_city = np.array(city_hotel_data[['number of guests']].iloc[[18, 19, 20, 21, 22, 23, 24, 25, 2, 3, 4, 5]])
     model_city_workload = LinearRegression().fit(x_city, y_city.reshape((-1, 1)))
     pred_city_workload = model_city_workload.predict(x_city)
     out_city_workload = pd.DataFrame(pred_city_workload)
