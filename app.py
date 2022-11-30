@@ -106,11 +106,11 @@ with st.container() as row_price_dynamics_business_month:
 
         with col_busiest_month:
 
-            resort_raw = dynamics_data[(dynamics_data['hotel'] == 'Resort Hotel') & (dynamics_data['is_canceled'] == 0)]
+            resort_raw = dynamics_data_selection[(dynamics_data_selection['hotel'] == 'Resort Hotel') & (dynamics_data_selection['is_canceled'] == 0)]
             resort_hotel_data = resort_raw['arrival_date'].value_counts().reset_index()
             resort_hotel_data.columns = ['time period', 'number of guests']
 
-            city_raw = dynamics_data[(dynamics_data['hotel'] == 'City Hotel') & (dynamics_data['is_canceled'] == 0)]
+            city_raw = dynamics_data[(dynamics_data_selection['hotel'] == 'City Hotel') & (dynamics_data_selection['is_canceled'] == 0)]
             city_hotel_data = city_raw['arrival_date'].value_counts().reset_index()
             city_hotel_data.columns = ['time period', 'number of guests']
 
