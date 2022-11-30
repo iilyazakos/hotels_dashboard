@@ -110,7 +110,7 @@ with st.container() as row_price_dynamics_business_month:
             resort_hotel_data = resort_raw['arrival_date'].value_counts().reset_index()
             resort_hotel_data.columns = ['time period', 'number of guests']
 
-            city_raw = dynamics_data[(dynamics_data_selection['hotel'] == 'City Hotel') & (dynamics_data_selection['is_canceled'] == 0)]
+            city_raw = dynamics_data[(resort_hotel_data['hotel'] == 'City Hotel') & (resort_hotel_data['is_canceled'] == 0)]
             city_hotel_data = city_raw['arrival_date'].value_counts().reset_index()
             city_hotel_data.columns = ['time period', 'number of guests']
 
