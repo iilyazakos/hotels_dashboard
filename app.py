@@ -39,8 +39,8 @@ with st.container() as row_description:
 
     with col_github:
         github = st.button(label = ' My Github')
-#Open my github
-if github: open_link("https://github.com/iilyazakos")
+         #Open my github
+        if github: open_link("https://github.com/iilyazakos")
 
 #[Totals]
 with st.container() as row_totals:
