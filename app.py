@@ -72,7 +72,7 @@ with st.container() as row_prices_books:
 
 with st.container() as row_col_slider:
     dynamics_data = hotels[['hotel', 'is_canceled', 'arrival_date_month', 'arrival_date_year', 'adr']]
-    dynamics_data[['arrival_date']] = pd.to_datetime(
+    dynamics_data['arrival_date'] = pd.to_datetime(
     dynamics_data['arrival_date_month'].map(str) + '' + dynamics_data['arrival_date_year'].map(str), format = '%B%Y').dt.strftime('%Y-%m')
     select_period_1, select_period_2 = st.select_slider('Choose a period',
                                                           options=dynamics_data['arrival_date'].unique(),
